@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Wallet Dashboard</title>
+    <!-- Vinculación de estilos local para GitHub Pages -->
+    <link rel="stylesheet" href="styles.css">
+    <!-- Iconos vía CDN para evitar instalaciones de terminal -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Cabecera -->
+        <header class="top-header">
+            <h1 class="app-title">Billetera</h1>
+            
+            <div class="header-actions">
+                <button class="btn-icon" id="btn-add-capital" title="Añadir Capital Total">
+                    <i data-lucide="plus"></i>
+                </button>
+            </div>
+        </header>
+
+        <!-- Balance Section Centrado -->
+        <section class="balance-section">
+            <h1 class="main-balance" id="main-balance-gtq">Q 0.00</h1>
+            <p class="fiat-balance" id="main-balance-usd">$0.00 USD</p>
+        </section>
+
+        <!-- Contenedor Dinámico de Tarjetas -->
+        <section class="cards-stack" id="cards-container">
+            <!-- JS inyectará las tarjetas -->
+            <div class="empty-cards-msg">Cargando...</div>
+        </section>
+
+        <!-- Action Buttons -->
+        <section class="action-buttons">
+            <button class="btn btn-light" id="btn-add-tx" title="Añadir Transacción">
+                <i data-lucide="plus"></i>
+            </button>
+            <button class="btn btn-light" id="btn-transfer" title="Transferir entre Tarjetas">
+                <i data-lucide="refresh-cw"></i>
+            </button>
+            <button class="btn btn-light" id="btn-add-card" title="Crear Nueva Tarjeta">
+                <i data-lucide="credit-card"></i>
+            </button>
+        </section>
+
+        <!-- Historial Dinámico -->
+        <section class="history-section">
+            <h2 class="history-title">Historial de Transacciones</h2>
+            <div class="history-list" id="history-container">
+                <!-- Los items del historial se inyectan por JS -->
+            </div>
+        </section>
+    </div>
+
+    <!-- ===== MODALES POP-UP ===== -->
+    <div class="modal-overlay" id="modal-overlay">
+        
+        <!-- Modal: Nueva Transacción -->
+        <div class="modal-content" id="modal-tx">
+            <h3>Nueva Transacción</h3>
+            <p class="modal-subtitle">Descontará saldo de la tarjeta actual.</p>
+            <input type="text" id="tx-name" placeholder="Ej. Spotify, Netflix...">
+            <input type="number" id="tx-amount" placeholder="Monto (Q)">
+            <div class="modal-actions">
+                <button class="btn-confirm" id="submit-tx">Guardar</button>
+            </div>
+        </div>
+
+        <!-- Modal: Transferir -->
+        <div class="modal-content" id="modal-transfer">
+            <h3>Transferir</h3>
+            <p class="modal-subtitle">Enviar fondos de esta tarjeta a otra.</p>
+            <select id="transfer-target" class="styled-select"></select>
+            <input type="number" id="transfer-amount" placeholder="Monto a enviar (Q)">
+            <div class="modal-actions">
+                <button class="btn-confirm" id="submit-transfer">Transferir</button>
+            </div>
+        </div>
+
+        <!-- Modal: Préstamo -->
+        <div class="modal-content" id="modal-borrow-confirm">
+            <h3>Saldo Insuficiente</h3>
+            <p class="modal-subtitle" id="borrow-text">¿Deseas tomar el monto faltante de tu Billetera?</p>
+            <div class="modal-actions">
+                <button class="btn-confirm" id="confirm-borrow">Aceptar y Transferir</button>
+            </div>
+        </div>
+
+        <!-- Modal: Crear Tarjeta -->
+        <div class="modal-content" id="modal-addcard">
+            <h3>Crear Tarjeta</h3>
+            <p class="modal-subtitle">Registra una nueva tarjeta a tu billetera.</p>
+            <input type="text" id="newcard-title" placeholder="Título (Ej. VIAJES)">
+            <input type="number" id="newcard-amount" placeholder="Capital Inicial (Q)">
+            <div class="modal-actions">
+                <button class="btn-confirm" id="submit-newcard">Crear</button>
+            </div>
+        </div>
+
+        <!-- Modal: Añadir Capital -->
+        <div class="modal-content" id="modal-addcapital">
+            <h3>Añadir Capital</h3>
+            <p class="modal-subtitle">Suma fondos a tu Billetera Principal.</p>
+            <input type="number" id="addcapital-amount" placeholder="Monto (Q)">
+            <div class="modal-actions">
+                <button class="btn-confirm" id="submit-addcapital">Añadir</button>
+            </div>
+        </div>
+
+        <!-- Modal: Opciones iOS -->
+        <div class="modal-content ios-modal" id="modal-cardoptions">
+            <h3>Fondo de Tarjeta</h3>
+            <div class="ios-color-picker">
+                <div class="color-btn" style="background-color: #ffc145;" data-color="#ffc145"></div>
+                <div class="color-btn" style="background-color: #1a1aeb;" data-color="#1a1aeb"></div>
+                <div class="color-btn" style="background-color: #fa3c3c;" data-color="#fa3c3c"></div>
+            </div>
+            <button class="ios-btn" id="btn-upload-bg">Elegir de Galería</button>
+            <input type="file" id="card-bg-upload" accept="image/*" style="display:none;">
+        </div>
+    </div>
+
+    <!-- Vinculación de lógica local para GitHub Pages -->
+    <script src="script.js"></script>
+</body>
+</html>
