@@ -31,9 +31,8 @@
 
         <!-- Barra de Filtros Rápida -->
         <div class="filter-bar">
-            <button class="filter-pill active" data-mode="live">En Vivo</button>
-            <button class="filter-pill" data-mode="month">Este Mes</button>
-            <button class="filter-pill" data-mode="year">Este Año</button>
+            <button class="filter-pill" data-mode="month">Mes</button>
+            <button class="filter-pill" id="filter-year-btn" data-mode="year">Ano</button>
             <button class="filter-pill" data-mode="custom">Rango</button>
         </div>
 
@@ -127,13 +126,12 @@
             </div>
         </div>
 
-        <!-- Modal: Confirmar Eliminación (Mini iOS) -->
+        <!-- Modal: Confirmar Eliminación (Refinado iOS) -->
         <div class="modal-content delete-confirm-modal" id="modal-delete-confirm">
-            <h3>¿Eliminar Tarjeta?</h3>
-            <p class="modal-subtitle">El saldo volverá a tu billetera.</p>
+            <h3>Eliminar Tarjeta</h3>
+            <p class="modal-subtitle">Esta acción borrará permanentemente la tarjeta y su historial.</p>
             <div class="modal-actions">
-                <button class="btn-confirm" style="background:#ff3b30;" id="btn-confirm-delete">Eliminar</button>
-                <button class="btn-cancel" onclick="closeModals()">Cancelar</button>
+                <button class="btn-confirm btn-delete-ios" id="btn-confirm-delete">Eliminar</button>
             </div>
         </div>
 

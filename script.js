@@ -20,6 +20,11 @@ const COLOR_PALETTE = ['#007aff', '#ff3b30', '#34c759', '#5856d6', '#ff9500', '#
 document.addEventListener("DOMContentLoaded", async () => {
     if (typeof lucide !== 'undefined') lucide.createIcons();
     await fetchExchangeRate();
+    
+    // Configurar año dinámico en botón
+    const yearBtn = document.getElementById('filter-year-btn');
+    if(yearBtn) yearBtn.textContent = new Date().getFullYear();
+
     renderCards();
     updateMainUI();
     setupEventListeners();
@@ -273,10 +278,13 @@ function setupEventListeners() {
     document.querySelectorAll('.filter-pill').forEach(btn => {
         btn.addEventListener('click', (e) => {
             const mode = e.target.getAttribute('data-mode');
-            if (mode === 'custom') {
+            // Toggle: Si ya está activo, volver a 'live'
+            const targetMode = (state.filterMode === mode) ? 'live' : mode;
+
+            if (targetMode === 'custom' && state.filterMode !== 'custom') {
                 openModal('modal-custom-range');
             } else {
-                updateFilterMode(mode);
+                updateFilterMode(targetMode);
             }
         });
     });
@@ -366,6 +374,12 @@ function handleAddCard() {
     const elAmount = document.getElementById('newcard-amount');
     const amount = parseFloat(elAmount.value) || 0;
     if(!elTitle.value) return;
+
+    if(state.cards.length >= 4) {
+        alert("Límite de tarjetas alcanzado (Máximo 4)");
+        closeModals();
+        return;
+    }
 
     const newId = Date.now().toString();
     let color = COLOR_PALETTE[state.cards.length % COLOR_PALETTE.length];
