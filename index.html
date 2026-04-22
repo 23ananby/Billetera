@@ -16,33 +16,44 @@
             <h1 class="app-title">Billetera</h1>
             
             <div class="header-actions">
-                <button class="btn-icon" id="btn-add-capital" title="Añadir Capital Total">
-                    <i data-lucide="plus"></i>
+                <button class="btn-icon" id="btn-reset-app" title="Resetear Aplicación">
+                    <i data-lucide="layout-grid"></i>
                 </button>
             </div>
         </header>
 
         <!-- Balance Section Centrado -->
         <section class="balance-section">
+            <p class="balance-label" id="balance-label-text">Ingresos del Mes</p>
             <h1 class="main-balance" id="main-balance-gtq">Q 0.00</h1>
             <p class="fiat-balance" id="main-balance-usd">$0.00 USD</p>
         </section>
 
+        <!-- Barra de Filtros Rápida -->
+        <div class="filter-bar">
+            <button class="filter-pill active" data-mode="live">En Vivo</button>
+            <button class="filter-pill" data-mode="month">Este Mes</button>
+            <button class="filter-pill" data-mode="year">Este Año</button>
+            <button class="filter-pill" data-mode="custom">Rango</button>
+        </div>
+
         <!-- Contenedor Dinámico de Tarjetas -->
         <section class="cards-stack" id="cards-container">
-            <!-- JS inyectará las tarjetas -->
             <div class="empty-cards-msg">Cargando...</div>
         </section>
 
         <!-- Action Buttons -->
         <section class="action-buttons">
-            <button class="btn btn-light" id="btn-add-tx" title="Añadir Transacción">
-                <i data-lucide="plus"></i>
+            <button class="btn btn-light" id="btn-add-tx" title="Nueva Transacción">
+                <i data-lucide="shopping-bag"></i>
             </button>
-            <button class="btn btn-light" id="btn-transfer" title="Transferir entre Tarjetas">
-                <i data-lucide="refresh-cw"></i>
+            <button class="btn btn-light" id="btn-transfer" title="Transferir">
+                <i data-lucide="send"></i>
             </button>
-            <button class="btn btn-light" id="btn-add-card" title="Crear Nueva Tarjeta">
+            <button class="btn btn-light" id="btn-add-capital" title="Ingresar Capital">
+                <i data-lucide="wallet"></i>
+            </button>
+            <button class="btn btn-light" id="btn-add-card" title="Nueva Tarjeta">
                 <i data-lucide="credit-card"></i>
             </button>
         </section>
@@ -62,65 +73,82 @@
         <!-- Modal: Nueva Transacción -->
         <div class="modal-content" id="modal-tx">
             <h3>Nueva Transacción</h3>
-            <p class="modal-subtitle">Descontará saldo de la tarjeta actual.</p>
-            <input type="text" id="tx-name" placeholder="Ej. Spotify, Netflix...">
+            <p class="modal-subtitle">Registra un gasto en esta tarjeta.</p>
+            <input type="text" id="tx-name" placeholder="Concepto">
             <input type="number" id="tx-amount" placeholder="Monto (Q)">
             <div class="modal-actions">
                 <button class="btn-confirm" id="submit-tx">Guardar</button>
+                <button class="btn-cancel" onclick="closeModals()">Cancelar</button>
             </div>
         </div>
 
         <!-- Modal: Transferir -->
         <div class="modal-content" id="modal-transfer">
             <h3>Transferir</h3>
-            <p class="modal-subtitle">Enviar fondos de esta tarjeta a otra.</p>
+            <p class="modal-subtitle">Enviar fondos a otra tarjeta.</p>
             <select id="transfer-target" class="styled-select"></select>
-            <input type="number" id="transfer-amount" placeholder="Monto a enviar (Q)">
+            <input type="number" id="transfer-amount" placeholder="Monto (Q)">
             <div class="modal-actions">
-                <button class="btn-confirm" id="submit-transfer">Transferir</button>
+                <button class="btn-confirm" id="submit-transfer">Confirmar</button>
+                <button class="btn-cancel" onclick="closeModals()">Cancelar</button>
             </div>
         </div>
 
         <!-- Modal: Préstamo -->
         <div class="modal-content" id="modal-borrow-confirm">
-            <h3>Saldo Insuficiente</h3>
-            <p class="modal-subtitle" id="borrow-text">¿Deseas tomar el monto faltante de tu Billetera?</p>
+            <h3>Confirmar Préstamo</h3>
+            <p class="modal-subtitle" id="borrow-text">¿Tomar el restante de la Billetera?</p>
             <div class="modal-actions">
-                <button class="btn-confirm" id="confirm-borrow">Aceptar y Transferir</button>
+                <button class="btn-confirm" id="confirm-borrow">Sí, realizar</button>
+                <button class="btn-cancel" onclick="closeModals()">No</button>
             </div>
         </div>
 
         <!-- Modal: Crear Tarjeta -->
         <div class="modal-content" id="modal-addcard">
-            <h3>Crear Tarjeta</h3>
-            <p class="modal-subtitle">Registra una nueva tarjeta a tu billetera.</p>
-            <input type="text" id="newcard-title" placeholder="Título (Ej. VIAJES)">
-            <input type="number" id="newcard-amount" placeholder="Capital Inicial (Q)">
+            <h3>Nueva Tarjeta</h3>
+            <p class="modal-subtitle">Elige un nombre y capital inicial.</p>
+            <input type="text" id="newcard-title" placeholder="Ej. Ahorros, Comida...">
+            <input type="number" id="newcard-amount" placeholder="Capital (Q)">
             <div class="modal-actions">
                 <button class="btn-confirm" id="submit-newcard">Crear</button>
+                <button class="btn-cancel" onclick="closeModals()">Cancelar</button>
             </div>
         </div>
 
         <!-- Modal: Añadir Capital -->
         <div class="modal-content" id="modal-addcapital">
-            <h3>Añadir Capital</h3>
-            <p class="modal-subtitle">Suma fondos a tu Billetera Principal.</p>
+            <h3>Billetera</h3>
+            <p class="modal-subtitle">Suma fondos a tu capital total.</p>
             <input type="number" id="addcapital-amount" placeholder="Monto (Q)">
             <div class="modal-actions">
                 <button class="btn-confirm" id="submit-addcapital">Añadir</button>
+                <button class="btn-cancel" onclick="closeModals()">Cancelar</button>
             </div>
         </div>
 
-        <!-- Modal: Opciones iOS -->
-        <div class="modal-content ios-modal" id="modal-cardoptions">
-            <h3>Fondo de Tarjeta</h3>
-            <div class="ios-color-picker">
-                <div class="color-btn" style="background-color: #ffc145;" data-color="#ffc145"></div>
-                <div class="color-btn" style="background-color: #1a1aeb;" data-color="#1a1aeb"></div>
-                <div class="color-btn" style="background-color: #fa3c3c;" data-color="#fa3c3c"></div>
+        <!-- Modal: Confirmar Eliminación (Mini iOS) -->
+        <div class="modal-content delete-confirm-modal" id="modal-delete-confirm">
+            <h3>¿Eliminar Tarjeta?</h3>
+            <p class="modal-subtitle">El saldo volverá a tu billetera.</p>
+            <div class="modal-actions">
+                <button class="btn-confirm" style="background:#ff3b30;" id="btn-confirm-delete">Eliminar</button>
+                <button class="btn-cancel" onclick="closeModals()">Cancelar</button>
             </div>
-            <button class="ios-btn" id="btn-upload-bg">Elegir de Galería</button>
-            <input type="file" id="card-bg-upload" accept="image/*" style="display:none;">
+        </div>
+
+        <!-- Modal: Rango de Fechas Personalizado -->
+        <div class="modal-content" id="modal-custom-range">
+            <h3>Seleccionar Rango</h3>
+            <p class="modal-subtitle">Filtra tus ingresos e historial.</p>
+            <div style="text-align:left; font-size:0.75rem; color:#888; margin-bottom:5px;">DESDE:</div>
+            <input type="date" id="filter-start-date">
+            <div style="text-align:left; font-size:0.75rem; color:#888; margin-bottom:5px;">HASTA:</div>
+            <input type="date" id="filter-end-date">
+            <div class="modal-actions">
+                <button class="btn-confirm" id="submit-custom-range">Aplicar Filtro</button>
+                <button class="btn-cancel" onclick="closeModals()">Cancelar</button>
+            </div>
         </div>
     </div>
 
