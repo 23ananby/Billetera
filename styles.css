@@ -12,7 +12,18 @@
     margin: 0; padding: 0; box-sizing: border-box;
     -webkit-tap-highlight-color: transparent;
     user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
 }
+
+html, body {
+    height: 100%;
+    overscroll-behavior-y: none; /* Bloquea pull-to-refresh */
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+html::-webkit-scrollbar, body::-webkit-scrollbar { display: none; }
 
 body {
     background-color: var(--bg-color); font-family: var(--font-system);
@@ -21,7 +32,8 @@ body {
 
 .app-container {
     width: 100%; max-width: 420px; min-height: 100vh;
-    padding: 25px 20px; background-color: var(--bg-color);
+    padding: calc(25px + env(safe-area-inset-top)) 20px calc(25px + env(safe-area-inset-bottom));
+    background-color: var(--bg-color);
     position: relative; overflow-x: hidden;
     display: flex; flex-direction: column;
 }

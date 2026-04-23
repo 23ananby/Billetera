@@ -18,9 +18,17 @@ const COLOR_PALETTE = ['#007aff', '#ff3b30', '#34c759', '#5856d6', '#ff9500', '#
 // INICIALIZACIÓN
 // ==========================================
 document.addEventListener("DOMContentLoaded", async () => {
+    // Registro de Service Worker
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('./sw.js').catch(() => {});
+    }
+
     if (typeof lucide !== 'undefined') lucide.createIcons();
     await fetchExchangeRate();
     
+    // Cargar datos persistidos
+    loadFromStorage();
+
     // Configurar año dinámico en botón
     const yearBtn = document.getElementById('filter-year-btn');
     if(yearBtn) yearBtn.textContent = new Date().getFullYear();
@@ -30,12 +38,34 @@ document.addEventListener("DOMContentLoaded", async () => {
     setupEventListeners();
 });
 
+// Manejo suave del botón atrás en Android cuando hay modales abiertos
+window.addEventListener('popstate', () => {
+    if(document.getElementById('modal-overlay').classList.contains('active')) {
+        closeModals();
+        history.pushState(null, null, window.location.pathname);
+    }
+});
+
 async function fetchExchangeRate() {
     try {
         const res = await fetch('https://open.er-api.com/v6/latest/GTQ');
         const data = await res.json();
         if(data && data.rates && data.rates.USD) state.exchangeRateUSD = data.rates.USD;
     } catch (error) { console.warn("API falló."); }
+}
+
+function saveToStorage() {
+    localStorage.setItem('wallet_pro_data', JSON.stringify(state));
+}
+
+function loadFromStorage() {
+    const saved = localStorage.getItem('wallet_pro_data');
+    if (saved) {
+        try {
+            const parsed = JSON.parse(saved);
+            state = { ...state, ...parsed };
+        } catch(e) { console.error("Error cargando datos"); }
+    }
 }
 
 function formatGTQ(amount) { return 'Q ' + Math.abs(amount).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); }
@@ -255,6 +285,7 @@ function toggleFavorite(cardId) {
     if(card) {
         card.isFavorite = !card.isFavorite;
         renderCards();
+        saveToStorage();
     }
 }
 
@@ -323,6 +354,7 @@ function updateFilterMode(mode, range = { start: null, end: null }) {
 
     updateMainUI();
     closeModals();
+    saveToStorage();
 }
 
 function handleCustomRange() {
@@ -348,6 +380,7 @@ function handleAddCapital() {
     });
 
     closeModals(); updateMainUI(); el.value = ''; renderCards();
+    saveToStorage();
 }
 
 function handleAddTransaction() {
@@ -367,6 +400,7 @@ function handleAddTransaction() {
 
     closeModals(); updateMainUI(); renderCards();
     elName.value = ''; elAmount.value = '';
+    saveToStorage();
 }
 
 function handleAddCard() {
@@ -394,6 +428,7 @@ function handleAddCard() {
     
     closeModals(); updateMainUI(); renderCards();
     elTitle.value = ''; elAmount.value = '';
+    saveToStorage();
 }
 
 function triggerDelete(cardId) {
@@ -404,6 +439,7 @@ function triggerDelete(cardId) {
         state.visualOrder = state.visualOrder.filter(id => id !== cardId);
         state.activeCardId = state.visualOrder.length > 0 ? state.visualOrder[state.visualOrder.length - 1] : null;
         closeModals(); updateMainUI(); renderCards();
+        saveToStorage();
     }, 300);
 }
 
@@ -412,6 +448,7 @@ function bringCardToFront(id) {
     state.visualOrder.push(id);
     state.activeCardId = id;
     renderCards(); renderHistory();
+    saveToStorage();
 }
 
 function openTransferModal() {
@@ -453,6 +490,8 @@ function openModal(id) {
     document.querySelectorAll('.modal-content').forEach(m => m.classList.remove('active'));
     document.getElementById('modal-overlay').classList.add('active');
     document.getElementById(id).classList.add('active');
+    // Empujar estado a la historia para que el botón atrás de Android cierre el modal
+    history.pushState({ modal: id }, null, "");
 }
 
 function closeModals() {
