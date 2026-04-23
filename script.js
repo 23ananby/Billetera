@@ -17,6 +17,15 @@ const COLOR_PALETTE = ['#007aff', '#ff3b30', '#34c759', '#5856d6', '#ff9500', '#
 // ==========================================
 // INICIALIZACIÓN
 // ==========================================
+let deferredPrompt;
+
+window.addEventListener('beforeinstallprompt', (e) => {
+    // Prevenir que Chrome muestre el banner automático para controlarlo nosotros o dejar que el sistema lo gestione al buscar "Instalar"
+    e.preventDefault();
+    deferredPrompt = e;
+    console.log('PWA lista para instalar');
+});
+
 document.addEventListener("DOMContentLoaded", async () => {
     // Registro de Service Worker
     if ('serviceWorker' in navigator) {
