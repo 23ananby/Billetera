@@ -1,9 +1,9 @@
 {
   "id": "com.walletpro.app.v1",
-  "name": "Billetera Wallet Pro",
-  "short_name": "WalletPro",
+  "name": "Billetera",
+  "short_name": "Billetera",
   "description": "Billetera nativa iOS style con persistencia local.",
-  "start_url": "./",
+  "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
   "background_color": "#ffffff",
@@ -11,16 +11,22 @@
   "prefer_related_applications": false,
   "icons": [
     {
-      "src": "./icon-app.svg",
-      "sizes": "192x192 512x512",
-      "type": "image/svg+xml",
+      "src": "./assets/images/icon_size_192px.png",
+      "sizes": "192x192",
+      "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "./icon-app.svg",
-      "sizes": "192x192 512x512",
-      "type": "image/svg+xml",
+      "src": "./assets/images/icon_size_192px.png",
+      "sizes": "192x192",
+      "type": "image/png",
       "purpose": "maskable"
+    },
+    {
+      "src": "./assets/images/icon_size_512px.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
     }
   ]
 }

@@ -4,6 +4,9 @@ const ASSETS = [
   './index.html',
   './styles.css',
   './script.js',
+  './manifest.json',
+  './assets/images/icon_size_192px.png',
+  './assets/images/icon_size_512px.png',
   'https://unpkg.com/lucide@latest'
 ];
 
